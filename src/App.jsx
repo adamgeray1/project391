@@ -1,34 +1,62 @@
-import './App.css'
-import { useState } from 'react'
-import { ReactSketchCanvas } from 'react-sketch-canvas';
-import { HexColorPicker } from "react-colorful";
-import styled from 'styled-components'
+import {useRef, useState} from 'react';
+import styled from 'styled-components';
+import {Page} from './components/Styling.jsx'
+import ToolBox from "./components/ToolBox.jsx";
+import './App.css';
 
-const styles = {
-    border: '0.0625rem solid #9c9c9c',
-    borderRadius: '0.25rem',
-};
+import CanvasDraw from "react-canvas-draw";
+import "rsuite/dist/rsuite.min.css";
 
-const D= styled.div`
-    display: flex;
-    flex-direction: column;
+
+
+
+
+const Canvas = styled(CanvasDraw)`
+    border: 0.0625rem solid #9c9c9c
 `
 
-const App = () => {
-    const [color, setColor] = useState("#aabbcc");
-    return (
-        <D>
-            <HexColorPicker color={color} onChange={setColor}/>
-            <ReactSketchCanvas
-                style={styles}
-                width="600px"
-                height="400px"
-                strokeWidth={40}
-                strokeColor={color}
-            />
-        </D>
-    );
-};
 
 
-export default App
+
+export default function App(){
+    const canvasRef = useRef(null); // Using useRef to reference the canvas
+    const [color, setColor] = useState("#1d88d9");
+    const [erase, setErase] = useState(false);
+    const [strokeWidth, setStrokeWidth] = useState(15);
+
+
+    return(
+        <Page>
+            <ToolBox
+                canvasRef={canvasRef}
+                color={color}
+                setColor={setColor}
+                erase={erase}
+                setErase={setErase}
+                setStrokeWidth={setStrokeWidth} />
+
+            {
+                erase ?
+                    <Canvas
+                        ref={canvasRef}
+                        brushColor={"white"}
+                        brushRadius={strokeWidth}
+                        lazyRadius={0}
+                        hideGrid={true}
+                        canvasWidth={600}
+                        canvasHeight={400}
+                    />
+                    :
+                    <Canvas
+                        ref={canvasRef}
+                        brushColor={color}
+                        brushRadius={strokeWidth}
+                        lazyRadius={0}
+                        hideGrid={true}
+                        canvasWidth={600}
+                        canvasHeight={400}
+                    />
+            }
+        </Page>
+    )
+}
