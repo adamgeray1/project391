@@ -1,5 +1,8 @@
+//Component by Brenton Babb. Header component for React Sketch
+
 import styled from 'styled-components';
 
+//Styles header according to color prop
 const StyledHeader = styled.header`
     background-color: ${(props) => props.color};
     color: rgb(227, 223, 223);
@@ -9,6 +12,7 @@ const StyledHeader = styled.header`
     text-align: center;
 `;
 
+//Returns the header with H3 and sets color
 const Header = ({color}) => {
     return (
         <StyledHeader color={color}>
