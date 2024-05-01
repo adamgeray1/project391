@@ -82,9 +82,18 @@ export default function App() {
         }
     };
 
+    //download current frame functionality -- Stefan Pretorius
+    const handleDownload = () => {
+        const fileUrl = canvasRef.current.getDataURL("image/png"); //uses getDataUrl property to get data info from current canvas
+        const link = document.createElement('a'); //hyperlink to file
+        link.download = 'canvas-frame.png';//change file name here
+        link.href = fileUrl;
+        link.click();
+    };
+
     /* 
         these four are self-explanatory handles for
-        pen, eraser, undo, and clear buttons- by Adam
+        pen, eraser, undo, and clear buttons - by Adam
     */
     const handlePenClick = () => {
         setErase(false);
@@ -128,6 +137,12 @@ export default function App() {
                     drawings={drawings}
                     loadDrawing={loadDrawing}
                 />
+
+                <button onClick={handleDownload}>
+                    Download Frame
+                </button>
+
+
             </Content>
         </Page>
     );
