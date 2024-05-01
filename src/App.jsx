@@ -53,6 +53,7 @@ export default function App() {
     };
 
     //Handles when you want to go back - Jiang Cheng Liu
+    //initially gets the new index to go back a page within the drawing and then loads it while also updating the current index
     const handlePrevDrawing = () => {
         const newIndex = currentIndex - 1;
         if (newIndex >= 0) {
@@ -69,6 +70,7 @@ export default function App() {
     };
 
     //uses the getSaveData() method and slicing of the drawing array to save the current drawing to the correct spot within the drawing history - Jiang Cheng Liu
+    //basically uses indexing to slice and get the previous frames and the next frames from the current drawing
     const handleSaveDrawing = () => {
         if (canvasRef.current) {
             const updatedDrawings = [
