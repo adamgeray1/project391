@@ -3,11 +3,13 @@ import ToolBox from './components/ToolBox.jsx'
 import CanvasContainer from "./components/DrawingCanvas.jsx";
 import styled from 'styled-components';
 
-import './styling/App.css'
 import "rsuite/dist/rsuite.min.css";
 import Header from "./components/Header.jsx";
 
 const Page = styled.div`
+    width: 100vw;
+`
+const Content = styled.div`
     display: flex;
     flex-direction: column;
     margin: auto;
@@ -77,31 +79,33 @@ export default function App() {
     };
 
     return (
-        <Page color={color}>
-            <Header
-                color={color}
-            />
-            <ToolBox
-                color={color}
-                setColor={setColor}
-                handleSaveDrawing={handleSaveDrawing}
-                handlePenClick={handlePenClick}
-                handleEraserClick={handleEraserClick}
-                handleUndoClick={handleUndoClick}
-                handleClearClick={handleClearClick}
-                handleNextDrawing={handleNextDrawing}
-                handlePrevDrawing={handlePrevDrawing}
-                setStrokeWidth={setStrokeWidth}
-            />
-            <CanvasContainer
-                canvasRef={canvasRef}
-                color={color}
-                erase={erase}
-                strokeWidth={strokeWidth}
-                currentIndex={currentIndex}
-                drawings={drawings}
-                loadDrawing={loadDrawing}
-            />
+        <Page>
+            <Content color={color}>
+                <Header
+                    color={color}
+                />
+                <ToolBox
+                    color={color}
+                    setColor={setColor}
+                    handleSaveDrawing={handleSaveDrawing}
+                    handlePenClick={handlePenClick}
+                    handleEraserClick={handleEraserClick}
+                    handleUndoClick={handleUndoClick}
+                    handleClearClick={handleClearClick}
+                    handleNextDrawing={handleNextDrawing}
+                    handlePrevDrawing={handlePrevDrawing}
+                    setStrokeWidth={setStrokeWidth}
+                />
+                <CanvasContainer
+                    canvasRef={canvasRef}
+                    color={color}
+                    erase={erase}
+                    strokeWidth={strokeWidth}
+                    currentIndex={currentIndex}
+                    drawings={drawings}
+                    loadDrawing={loadDrawing}
+                />
+            </Content>
         </Page>
     );
 }
