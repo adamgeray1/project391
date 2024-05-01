@@ -1,3 +1,5 @@
+// Component by Adam, creates the box which holds all the function buttons
+
 import styled from 'styled-components';
 import { HexColorPicker } from "react-colorful";
 import CustomSlider from "./CustomSlider.jsx";
@@ -46,6 +48,7 @@ const Button = styled.button`
     }
 `;
 
+// the function buttons sends its values back to App through useStates
 export default function Toolbox({
                                     color,
                                     setColor,
