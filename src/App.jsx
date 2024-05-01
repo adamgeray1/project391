@@ -35,6 +35,10 @@ export default function App() {
     const [erase, setErase] = useState(false); // will set color to white when true.
     const [strokeWidth, setStrokeWidth] = useState(8); // will hold how thick the pen lines are
 
+    //artificially creates a "next page" function such that once its clicked, the current page index that we are at is increased.
+    //loads drawing if we are within the bounds of the drawing "history"
+    //simulates a new page otherwise by clearing - Jiang Cheng Liu
+
     const handleNextDrawing = () => {
         const nextIndex = currentIndex + 1;
         if (nextIndex < drawings.length) {
@@ -48,6 +52,7 @@ export default function App() {
         }
     };
 
+    //Handles when you want to go back - Jiang Cheng Liu
     const handlePrevDrawing = () => {
         const newIndex = currentIndex - 1;
         if (newIndex >= 0) {
@@ -56,12 +61,14 @@ export default function App() {
         }
     };
 
+    //uses the loadSaveData() method to get the drawing we want based on the index - Jiang Cheng Liu
     const loadDrawing = (index) => {
         canvasRef.current.clear();
         const drawing = drawings[index];
         canvasRef.current.loadSaveData(drawing, true);
     };
 
+    //uses the getSaveData() method and slicing of the drawing array to save the current drawing to the correct spot within the drawing history - Jiang Cheng Liu
     const handleSaveDrawing = () => {
         if (canvasRef.current) {
             const updatedDrawings = [
