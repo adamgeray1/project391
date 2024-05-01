@@ -1,130 +1,107 @@
-import './App.css';
-import { useState, useRef } from 'react';
-import { ReactSketchCanvas } from 'react-sketch-canvas';
-import { HexColorPicker } from "react-colorful";
+import {useRef, useState} from 'react';
+import ToolBox from './components/ToolBox.jsx'
+import CanvasContainer from "./components/DrawingCanvas.jsx";
 import styled from 'styled-components';
 
-const styles = {
-    border: '0.0625rem solid #9c9c9c',
-    borderRadius: '0.25rem',
-};
+import './styling/App.css'
+import "rsuite/dist/rsuite.min.css";
+import Header from "./components/Header.jsx";
 
-const D= styled.div`
+const Page = styled.div`
     display: flex;
     flex-direction: column;
-    align-content: center;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    width: 600px;
 `
 
-const Toolbox = styled.div`
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  // You can also style child elements specifically
-  button {
-    cursor: pointer;
-  }
-
-  input {
-    margin: 0 5px;
-  }
-`;
-
-const App = () => {
-    const [color, setColor] = useState("#aabbcc");
+export default function App() {
+    const [drawings, setDrawings] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
     const canvasRef = useRef(null); // Using useRef to reference the canvas
-    const [eraseMode, setEraseMode] = useState(false);
-    const [strokeWidth, setStrokeWidth] = useState(5);
-    const [eraserWidth, setEraserWidth] = useState(10);
 
-    const handleEraserClick = () => {
-        setEraseMode(true);
-        canvasRef.current.eraseMode(true);
+    const [color, setColor] = useState("#1d88d9");
+    const [erase, setErase] = useState(false);
+    const [strokeWidth, setStrokeWidth] = useState(8);
+
+    const handleNextDrawing = () => {
+        const nextIndex = currentIndex + 1;
+        if (nextIndex < drawings.length) {
+            loadDrawing(nextIndex);
+            setCurrentIndex(nextIndex);
+        } else {
+            canvasRef.current.clear();
+            if (drawings[currentIndex]) {
+                setCurrentIndex(nextIndex);
+            }
+        }
+    };
+
+    const handlePrevDrawing = () => {
+        const newIndex = currentIndex - 1;
+        if (newIndex >= 0) {
+            loadDrawing(newIndex);
+            setCurrentIndex(newIndex);
+        }
+    };
+
+    const loadDrawing = (index) => {
+        canvasRef.current.clear();
+        const drawing = drawings[index];
+        canvasRef.current.loadSaveData(drawing, true);
+    };
+
+    const handleSaveDrawing = () => {
+        if (canvasRef.current) {
+            const updatedDrawings = [
+                ...drawings.slice(0, currentIndex),
+                canvasRef.current.getSaveData(),
+                ...drawings.slice(currentIndex + 1)
+            ];
+            setDrawings(updatedDrawings);
+        }
     };
 
     const handlePenClick = () => {
-        setEraseMode(false);
-        canvasRef.current.eraseMode(false);
+        setErase(false);
     };
-
-    const handleStrokeWidthChange = (event) => {
-        setStrokeWidth(event.target.value);
+    const handleEraserClick = () => {
+        setErase(true);
     };
-
-    const handleEraserWidthChange = (event) => {
-        setEraserWidth(event.target.value);
+    const handleUndoClick = () => {
+        canvasRef.current.undo();
     };
-
-
-
-    const downloadImage = () => {
-        canvasRef.current.exportImage('jpeg')
-            .then(data => {
-                // Creating a link and setting the href to the data URL
-                const link = document.createElement('a');
-                link.download = 'frame.png';
-                link.href = data;
-                link.click(); // Simulating a click to automatically start the download
-            })
-            .catch(e => {
-                console.error(e);
-            });
+    const handleClearClick = () => {
+        canvasRef.current.clear();
     };
-
-    const advanceFrame = () => {
-
-    }
-    const previousFrame = () => {
-
-    }
 
     return (
-        <D>
-            <Toolbox>
-                <HexColorPicker color={color} onChange={setColor}/>
-                <button onClick={handlePenClick} disabled={!eraseMode}>Brush</button>
-                <button onClick={handleEraserClick} disabled={eraseMode}>Eraser</button>
-
-                <label>Stroke width</label>
-
-                <input
-                    type="number"
-                    value={strokeWidth}
-                    onChange={handleStrokeWidthChange}
-                    disabled={eraseMode}
-                />
-
-                <label htmlFor="eraserWidth">Eraser width</label>
-
-                <input
-                    type="number"
-                    value={eraserWidth}
-                    onChange={handleEraserWidthChange}
-                    disabled={!eraseMode}
-                />
-            </Toolbox>
-
-            <ReactSketchCanvas
-                ref={canvasRef}
-                style={styles}
-                width="400px"
-                height="400px"
-                strokeWidth={strokeWidth}
-                eraserWidth={eraserWidth}
-                strokeColor={color}
+        <Page color={color}>
+            <Header
+                color={color}
             />
-
-            <button onClick={advanceFrame}> Next (not working)</button>
-
-            <button onClick={previousFrame}> Previous (not working)</button>
-
-            <button onClick={downloadImage}>Download Frame</button>
-        </D>
+            <ToolBox
+                color={color}
+                setColor={setColor}
+                handleSaveDrawing={handleSaveDrawing}
+                handlePenClick={handlePenClick}
+                handleEraserClick={handleEraserClick}
+                handleUndoClick={handleUndoClick}
+                handleClearClick={handleClearClick}
+                handleNextDrawing={handleNextDrawing}
+                handlePrevDrawing={handlePrevDrawing}
+                setStrokeWidth={setStrokeWidth}
+            />
+            <CanvasContainer
+                canvasRef={canvasRef}
+                color={color}
+                erase={erase}
+                strokeWidth={strokeWidth}
+                currentIndex={currentIndex}
+                drawings={drawings}
+                loadDrawing={loadDrawing}
+            />
+        </Page>
     );
-};
-
-export default App;
+}
