@@ -93,11 +93,11 @@ export default function App() {
     return (
         <Page>
             <Content color={color}>
-                // Done by Brenton Babb
+                {/* Done by Brenton Babb*/}
                 <Header
                     color={color}
                 />
-                // Done by Adam Geray
+                {/* Done by Adam Geray*/}
                 <ToolBox
                     color={color}
                     setColor={setColor}
